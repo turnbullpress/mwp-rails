@@ -7,12 +7,10 @@ class UsersController < ApplicationController
   end
 
   def show
-    STATSD.time("find_user") do
-      @user = User.find(params[:id])
-    end
+    @user = User.find(params[:id])
     unless current_user.admin?
       unless @user == current_user
-        redirect_to :back, :alert => "Access denied."
+        redirect_to root_path, :alert => "Access denied."
       end
     end
   end
@@ -21,6 +19,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if @user.update_attributes(secure_params)
       redirect_to users_path, :notice => "User updated."
+      Metrics.counter(:users_updated_counter, "Users updated counter").increment
     else
       redirect_to users_path, :alert => "Unable to update user."
     end
@@ -29,8 +28,7 @@ class UsersController < ApplicationController
   def destroy
     user = User.find(params[:id])
     user.destroy
-    STATSD.increment "user.deleted"
-    logger.info message: 'user_deleted', user: @user
+    Metrics.counter(:users_deleted_counter, "Deleted users counter").increment
     redirect_to users_path, :notice => "User deleted."
   end
 
@@ -38,7 +36,7 @@ class UsersController < ApplicationController
 
   def admin_only
     unless current_user.admin?
-      redirect_to :back, :alert => "Access denied."
+      redirect_to root_path, :alert => "Access denied."
     end
   end
 
