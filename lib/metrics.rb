@@ -7,7 +7,7 @@ module Metrics
     provide_metric(name) || registry.summary(name, docstring, base_labels)
   end
 
-  def self.gauge(name, docstringi, base_labels = {})
+  def self.gauge(name, docstring, base_labels = {})
     provide_metric(name) || registry.gauge(name, docstring, base_labels)
   end
 
@@ -17,11 +17,11 @@ module Metrics
 
   private
 
-  def self.provide_metric(name)
+  def provide_metric(name)
     registry.get(name)
   end
 
-  def self.registry
+  def registry
     @registry ||= ::Prometheus::Client.registry
   end
 end

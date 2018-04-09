@@ -1,5 +1,3 @@
-require 'prometheus/client'
-require 'prometheus/client/push'
 namespace :deploy do
   desc "Deploy the mwp-rails application"
   task :release do
@@ -10,5 +8,8 @@ namespace :deploy do
 
   desc "Notify Prometheus of a deployment"
   task :notify do
+    mp = MetricsPush.new
+    mp.counter(:test, "A test counter for a job").increment({ service: 'mwp-rails-deploy', deployment_time: Time.now })
+    mp.push
   end
 end

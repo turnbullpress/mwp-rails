@@ -1,1 +1,2 @@
 require 'metrics'
+require 'metricspush'
