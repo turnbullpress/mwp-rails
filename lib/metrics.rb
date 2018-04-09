@@ -17,11 +17,11 @@ module Metrics
 
   private
 
-  def provide_metric(name)
+  def self.provide_metric(name)
     registry.get(name)
   end
 
-  def registry
+  def self.registry
     @registry ||= ::Prometheus::Client.registry
   end
 end
