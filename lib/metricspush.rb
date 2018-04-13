@@ -1,13 +1,11 @@
 require 'prometheus/client'
 require 'prometheus/client/push'
-require 'socket'
 
 class MetricsPush
-  attr_reader :job, :hostname, :registry, :pushgateway_url
+  attr_reader :job, :registry, :pushgateway_url
 
   def initialize
     @job = 'mwp-rails'
-    @hostname = Socket.gethostname
     @pushgateway_url = 'http://localhost:9091'
   end
 
@@ -32,7 +30,6 @@ class MetricsPush
   end
 
   def push
-    Prometheus::Client::Push.new(job, hostname, pushgateway_url).add(registry)
+    Prometheus::Client::Push.new(job, pushgateway_url).add(registry)
   end
 end
-
