@@ -9,7 +9,7 @@ namespace :job do
   desc "Notify Prometheus of a job"
   task :notify do
     mp = MetricsPush.new
-    mp.counter(:test, "A test counter for a job").increment({ service: 'mwp-rails-deploy', deployment_time: Time.now })
+    mp.counter(:test_counter, "A test counter for a job").increment({ service: 'mwp-rails-deploy' })
     mp.push
   end
 end

@@ -30,6 +30,6 @@ class MetricsPush
   end
 
   def push
-    Prometheus::Client::Push.new(job, pushgateway_url).add(registry)
+    Prometheus::Client::Push.new(job, nil, pushgateway_url).add(registry)
   end
 end
